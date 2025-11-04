@@ -1,26 +1,31 @@
-document.querySelectorAll('.code').forEach((input, index, inputs) => {
-    input.addEventListener('input', (e) => {
-        // Move to the next field if the current field is filled
-        if (e.target.value.length === 1) {
-            if (index < inputs.length - 1) {
-                inputs[index + 1].focus();
-            }
-        }
-    });
+const codes = document.querySelectorAll(".code");
 
-    input.addEventListener('keydown', (e) => {
-        // Move to the previous field if backspace is pressed and the current field is empty
-        if (e.key === 'Backspace' && input.value === '') {
+    codes[0].focus(); // Focus first box on page load
+
+    codes.forEach((input, index) => {
+      input.addEventListener("input", (e) => {
+        const value = e.target.value;
+        if (/^[0-9]$/.test(value)) {
+          if (index < codes.length - 1) {
+            codes[index + 1].focus();
+          } else {
+            input.blur(); // Last box loses focus
+          }
+        } else {
+          e.target.value = ""; // Clear non-digit input
+        }
+      });
+
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Backspace") {
+          if (input.value === "") {
             if (index > 0) {
-                inputs[index - 1].focus();
+              codes[index - 1].focus();
+              codes[index - 1].value = "";
             }
+          } else {
+            input.value = "";
+          }
         }
+      });
     });
-
-    // Automatically focus the previous field if a number is typed in the current field
-    input.addEventListener('input', (e) => {
-        if (e.target.value.length === 1 && index > 0) {
-            inputs[index - 1].focus();
-        }
-    });
-});
